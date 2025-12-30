@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════════════════
+           MiniKV - Command Cheatsheet (Quick Reference)
+═══════════════════════════════════════════════════════════════════
+
+▸ HOW TO START
+───────────────────────────────────────────────────────────────────
+  Open Terminal and navigate to project:
+  $ cd "/Users/yashpatil/Desktop/SDE - 6mo/minikv"
+
+
+▸ QUICK RUN OPTIONS
+───────────────────────────────────────────────────────────────────
+  Run example (easiest):
+  $ python3 example.py
+
+  Start interactive CLI:
+  $ python3 -m client.cli
+
+  Run single command:
+  $ python3 -m client.cli --command "SET key value"
+
+  Run tests:
+  $ python3 -m tests.test_concurrency
+  $ python3 -m tests.test_recovery
+
+  Run benchmarks:
+  $ python3 -m benchmarks.benchmark
+
+
+▸ CLI COMMANDS (use inside interactive mode)
+───────────────────────────────────────────────────────────────────
+  SET <key> <value>         Store data
+  GET <key>                 Retrieve data
+  DELETE <key>              Remove key
+  EXISTS <key>              Check if key exists
+  KEYS                      List all keys
+  VALUES                    List all values
+  ITEMS                     Show all key-value pairs
+  SIZE                      Count entries
+  CLEAR                     Delete all data
+  UPDATE <json>             Batch update
+  CHECKPOINT                Save to disk
+  STATS                     Show statistics
+  HELP                      Show help
+  EXIT                      Quit
+
+
+▸ EXAMPLE COMMANDS
+───────────────────────────────────────────────────────────────────
+  SET name "John"
+  SET age 30
+  SET user {"name": "John", "age": 30}
+  SET items ["apple", "banana", "orange"]
+  
+  GET name
+  DELETE age
+  EXISTS user
+  
+  UPDATE {"key1": "value1", "key2": 42}
+  
+  KEYS
+  SIZE
+  STATS
+  EXIT
+
+
+▸ ADVANCED OPTIONS
+───────────────────────────────────────────────────────────────────
+  python3 -m client.cli --workers 8           # More threads
+  python3 -m client.cli --no-persistence      # In-memory only
+  python3 -m client.cli --no-wal              # Disable logging
+  python3 -m client.cli --db custom.db        # Custom DB path
+
+
+▸ FILES CREATED
+───────────────────────────────────────────────────────────────────
+  minikv.db       SQLite database (persistent storage)
+  minikv.wal      Write-Ahead Log (for recovery)
+
+
+▸ NEED HELP?
+───────────────────────────────────────────────────────────────────
+  See QUICKSTART.md for detailed guide
+  See README.md for complete documentation
+
+
+═══════════════════════════════════════════════════════════════════
+

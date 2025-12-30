@@ -1,0 +1,6 @@
+# MiniKV - Concurrent In-Memory Key-Value Store
+# Python 3.8+ required
+
+# Optional: PostgreSQL support (uncomment if needed)
+# psycopg2-binary>=2.9.0
+
