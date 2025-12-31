@@ -1,8 +1,7 @@
 # MiniKV Dockerfile
-# Multi-stage build for optimized image size
+# Optimized single-stage build
 
-# Build stage
-FROM python:3.11-slim as builder
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
@@ -11,16 +10,8 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir --user -r requirements.txt
-
-# Runtime stage
-FROM python:3.11-slim
-
-# Set working directory
-WORKDIR /app
-
-# Copy Python dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Note: requirements.txt is minimal (only comments), so this is fast
+RUN pip install --no-cache-dir -r requirements.txt || true
 
 # Copy application code
 COPY core/ ./core/
@@ -29,9 +20,6 @@ COPY client/ ./client/
 COPY benchmarks/ ./benchmarks/
 COPY tests/ ./tests/
 COPY example.py .
-
-# Make sure scripts in .local are usable
-ENV PATH=/root/.local/bin:$PATH
 
 # Create volume for persistent data
 VOLUME ["/app/data"]
