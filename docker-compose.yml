@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # MiniKV CLI Service
+  minikv-cli:
+    build: .
+    container_name: minikv-cli
+    image: minikv:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - minikv-data:/app/data
+    environment:
+      - MINIKV_WORKERS=4
+      - MINIKV_DB_PATH=/app/data/minikv.db
+      - MINIKV_WAL_PATH=/app/data/minikv.wal
+    networks:
+      - minikv-network
+
+  # MiniKV Example Runner
+  minikv-example:
+    build: .
+    container_name: minikv-example
+    image: minikv:latest
+    command: python3 example.py
+    volumes:
+      - minikv-data:/app/data
+    environment:
+      - MINIKV_WORKERS=4
+    networks:
+      - minikv-network
+    profiles:
+      - example
+
+  # MiniKV Tests
+  minikv-tests:
+    build: .
+    container_name: minikv-tests
+    image: minikv:latest
+    command: python3 -m tests.test_concurrency
+    volumes:
+      - minikv-data:/app/data
+    networks:
+      - minikv-network
+    profiles:
+      - test
+
+  # MiniKV Benchmarks
+  minikv-benchmark:
+    build: .
+    container_name: minikv-benchmark
+    image: minikv:latest
+    command: python3 -m benchmarks.benchmark --operations 5000
+    volumes:
+      - minikv-data:/app/data
+    networks:
+      - minikv-network
+    profiles:
+      - benchmark
+
+volumes:
+  minikv-data:
+    driver: local
+
+networks:
+  minikv-network:
+    driver: bridge
+

@@ -1,0 +1,129 @@
+═══════════════════════════════════════════════════════════════════
+                   MiniKV Docker Quick Reference
+═══════════════════════════════════════════════════════════════════
+
+▸ QUICK START (Copy-Paste These)
+───────────────────────────────────────────────────────────────────
+  Build:
+  $ make build
+
+  Run CLI:
+  $ make run
+
+  Run Example:
+  $ make example
+
+  Run Tests:
+  $ make test
+
+  Run Benchmarks:
+  $ make benchmark
+
+
+▸ DOCKER COMPOSE COMMANDS
+───────────────────────────────────────────────────────────────────
+  Build image:
+  $ docker-compose build
+
+  Run interactive CLI:
+  $ docker-compose run --rm minikv-cli
+
+  Run example:
+  $ docker-compose --profile example run --rm minikv-example
+
+  Run tests:
+  $ docker-compose --profile test run --rm minikv-tests
+
+  Run benchmarks:
+  $ docker-compose --profile benchmark run --rm minikv-benchmark
+
+  Get shell access:
+  $ docker-compose run --rm minikv-cli /bin/bash
+
+
+▸ DIRECT DOCKER COMMANDS
+───────────────────────────────────────────────────────────────────
+  Build image:
+  $ docker build -t minikv:latest .
+
+  Run CLI:
+  $ docker run -it minikv:latest
+
+  Run with volume:
+  $ docker run -it -v $(pwd)/data:/app/data minikv:latest
+
+  Run example:
+  $ docker run minikv:latest python3 example.py
+
+  Run tests:
+  $ docker run minikv:latest python3 -m tests.test_concurrency
+
+
+▸ CLEANUP
+───────────────────────────────────────────────────────────────────
+  Stop all containers:
+  $ make stop
+
+  Remove containers and volumes:
+  $ make clean
+
+  Remove all:
+  $ docker-compose down -v
+
+
+▸ DEBUGGING
+───────────────────────────────────────────────────────────────────
+  View logs:
+  $ make logs
+
+  Shell access:
+  $ make shell
+
+  Check running containers:
+  $ docker ps
+
+  Check images:
+  $ docker images | grep minikv
+
+
+▸ GIT COMMANDS (First Time Setup)
+───────────────────────────────────────────────────────────────────
+  $ cd "/Users/yashpatil/Desktop/SDE - 6mo/minikv"
+  $ git init
+  $ git add .
+  $ git commit -m "Initial commit: MiniKV with Docker support"
+  $ git remote add origin https://github.com/YOUR_USERNAME/minikv.git
+  $ git branch -M main
+  $ git push -u origin main
+
+
+▸ GIT COMMANDS (Future Updates)
+───────────────────────────────────────────────────────────────────
+  $ git status
+  $ git add .
+  $ git commit -m "Your commit message"
+  $ git push
+
+
+▸ ENVIRONMENT VARIABLES
+───────────────────────────────────────────────────────────────────
+  MINIKV_WORKERS      - Number of worker threads (default: 4)
+  MINIKV_DB_PATH      - Database file path
+  MINIKV_WAL_PATH     - WAL file path
+
+
+▸ WHAT RECRUITERS SEE
+───────────────────────────────────────────────────────────────────
+  ✅ Dockerfile (multi-stage build)
+  ✅ docker-compose.yml (orchestration)
+  ✅ .dockerignore (optimization)
+  ✅ Makefile (DevOps automation)
+  ✅ Health checks (monitoring)
+  ✅ Volume management (persistence)
+  ✅ Professional README
+
+  = You understand production deployment! 🚀
+
+
+═══════════════════════════════════════════════════════════════════
+

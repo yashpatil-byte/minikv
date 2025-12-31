@@ -1,0 +1,52 @@
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+env/
+
+# MiniKV data files
+*.db
+*.wal
+minikv.db
+minikv.wal
+example.db
+example.wal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation (keep README)
+docs/
+QUICKSTART.md
+LINKEDIN_POSTS.md
+GITHUB_SETUP.md
+START_HERE.txt
+COMMANDS_CHEATSHEET.txt
+demo_cli.sh
+
+# Logs
+*.log
+*.tmp
+

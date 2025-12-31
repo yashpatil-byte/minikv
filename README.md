@@ -39,9 +39,38 @@ WAL Logger  →  In-Memory    →  Persistence
 
 MiniKV requires Python 3.8 or higher.
 
+### Option 1: Using Docker (Recommended)
+
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/yourusername/minikv.git
+cd minikv
+
+# Build the Docker image
+make build
+# OR
+docker-compose build
+
+# Run MiniKV CLI
+make run
+# OR
+docker-compose run --rm minikv-cli
+
+# Run example
+make example
+
+# Run tests
+make test
+
+# Run benchmarks
+make benchmark
+```
+
+### Option 2: Local Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/minikv.git
 cd minikv
 
 # Install dependencies (optional, only if using PostgreSQL)
@@ -340,6 +369,75 @@ router = Router(
     enable_wal=True,
     wal_path="minikv.wal"
 )
+```
+
+## Docker Deployment
+
+MiniKV is fully containerized with Docker support for reproducible deployments.
+
+### Quick Start with Docker
+
+```bash
+# Build the image
+docker-compose build
+
+# Run the CLI
+docker-compose run --rm minikv-cli
+
+# Run example
+docker-compose --profile example run --rm minikv-example
+
+# Run tests
+docker-compose --profile test run --rm minikv-tests
+
+# Run benchmarks
+docker-compose --profile benchmark run --rm minikv-benchmark
+```
+
+### Using Makefile (Easier)
+
+```bash
+# Build
+make build
+
+# Run CLI
+make run
+
+# Run example
+make example
+
+# Run tests
+make test
+
+# Run benchmarks
+make benchmark
+
+# Clean up
+make clean
+```
+
+### Docker Features
+
+- **Multi-stage build**: Optimized image size
+- **Volume persistence**: Data survives container restarts
+- **Health checks**: Automatic container health monitoring
+- **Isolated environment**: Consistent behavior across systems
+- **Easy CI/CD integration**: Ready for automated testing
+
+### Docker Image Details
+
+```bash
+# Build custom image
+docker build -t minikv:custom .
+
+# Run with custom settings
+docker run -it \
+  -e MINIKV_WORKERS=8 \
+  -v $(pwd)/data:/app/data \
+  minikv:custom
+
+# Get shell access
+docker-compose run --rm minikv-cli /bin/bash
 ```
 
 ## Performance Characteristics
