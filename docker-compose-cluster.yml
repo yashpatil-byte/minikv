@@ -1,0 +1,157 @@
+version: '3.8'
+
+services:
+  # Node 1
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-node1
+    ports:
+      - "8001:8001"
+    environment:
+      - NODE_ID=1
+      - PORT=8001
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - node1-data:/app/data
+    command: python -m distributed.node_server 1 8001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - minikv-cluster
+
+  # Node 2
+  node2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-node2
+    ports:
+      - "8002:8002"
+    environment:
+      - NODE_ID=2
+      - PORT=8002
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - node2-data:/app/data
+    command: python -m distributed.node_server 2 8002
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - minikv-cluster
+
+  # Node 3
+  node3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-node3
+    ports:
+      - "8003:8003"
+    environment:
+      - NODE_ID=3
+      - PORT=8003
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - node3-data:/app/data
+    command: python -m distributed.node_server 3 8003
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - minikv-cluster
+
+  # Cluster Initializer (runs once to register peers)
+  cluster-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-cluster-init
+    depends_on:
+      - node1
+      - node2
+      - node3
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      sh -c "
+      echo 'Waiting for nodes to be ready...';
+      sleep 15;
+      python -m distributed.cluster_manager;
+      "
+    networks:
+      - minikv-cluster
+    profiles:
+      - init
+
+  # API Gateway
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - node1
+      - node2
+      - node3
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      sh -c "
+      echo 'Waiting for nodes to be ready...';
+      sleep 20;
+      python -m distributed.gateway;
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - minikv-cluster
+
+  # Benchmarking service (optional)
+  benchmark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minikv-benchmark
+    depends_on:
+      - gateway
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      sh -c "
+      echo 'Waiting for cluster to be ready...';
+      sleep 30;
+      python -m benchmarks.benchmark_cluster --gateway http://gateway:8000 --operations 100000 --concurrency 100;
+      "
+    networks:
+      - minikv-cluster
+    profiles:
+      - benchmark
+
+networks:
+  minikv-cluster:
+    driver: bridge
+
+volumes:
+  node1-data:
+  node2-data:
+  node3-data:
+
